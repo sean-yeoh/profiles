@@ -4,7 +4,22 @@ class ListingsController < ApplicationController
   # GET /listings
   # GET /listings.json
   def index
-    @listings = Listing.all
+    @filterrific = initialize_filterrific(
+      Listing,
+      params[:filterrific],
+      :select_options => {
+        location: Listing.uniq.pluck(:location),
+        category: ['apartment', 'terrace', 'bungalow', 'villa'],
+        room_nums: Listing.uniq.pluck(:room_nums).sort,
+        bathroom_nums: Listing.uniq.pluck(:bathroom_nums).sort
+      }
+    ) or return
+    @listings = @filterrific.find.page(params[:page])
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   # GET /listings/1
@@ -69,6 +84,6 @@ class ListingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def listing_params
-      params.require(:listing).permit(:type, :title, :location, :room_nums, :bathroom_nums)
+      params.require(:listing).permit(:category, :title, :location, :room_nums, :bathroom_nums)
     end
 end

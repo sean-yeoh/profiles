@@ -46,3 +46,7 @@ group :development do
   gem 'spring'
 end
 
+# Filterrific is a Rails Engine plugin that makes it easy to filter, search, and sort your ActiveRecord lists:
+gem 'filterrific'
+
+gem 'will_paginate', '~> 3.1.0'
